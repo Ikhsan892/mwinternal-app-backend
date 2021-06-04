@@ -3,10 +3,10 @@ import { GlobalEntity } from "src/global.entity";
 import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
-export class Kerusakan extends GlobalEntity{
+export class Keluhan extends GlobalEntity {
     @Column()
-    nama_kerusakan : string;
+    isi_keluhan : string;
 
-    @ManyToOne(() => Barang, cr => cr.kerusakan)
+    @ManyToOne(() => Barang, cr => cr.keluhan)
     barang : Barang;
 }
