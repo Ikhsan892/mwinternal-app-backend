@@ -6,29 +6,29 @@ import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 @Entity()
 export class User extends GlobalEntity {
     @Column()
-    firstName : string;
+    firstName: string;
 
     @Column()
-    lastName : string;
+    lastName: string;
 
     @Column()
-    email : string;
+    email: string;
 
     @Column()
-    password : string;
+    password: string;
 
     @Column()
-    phone : number;
+    phone: string;
 
     @ManyToOne(() => Role, cr => cr.user)
-    role : Role;
+    role: Role;
 
-    @OneToMany(() => Barang , cr => cr.created_by)
-    created_by : Barang[];
+    @OneToMany(() => Barang, cr => cr.created_by)
+    created_by: Barang[];
 
-    @OneToMany(() => Barang , cr => cr.teknisi)
-    teknisi : Barang[];
+    @OneToMany(() => Barang, cr => cr.teknisi)
+    teknisi: Barang[];
 
-    @OneToMany(() => Barang , cr => cr.admin)
-    admin : Barang[];
+    @OneToMany(() => Barang, cr => cr.admin)
+    admin: Barang[];
 }

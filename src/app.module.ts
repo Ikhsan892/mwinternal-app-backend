@@ -15,21 +15,22 @@ import { KeluhanModule } from './keluhan/keluhan.module';
 import { ImageBarangModule } from './image-barang/image-barang.module';
 import { PengirimanModule } from './pengiriman/pengiriman.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UserModule, RoleModule, 
+  imports: [UserModule, RoleModule,
     TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: '',
-    database: 'makersware_db',
-    entities: ["dist/**/*.entity{.ts,.js}"],
-    logging:true, 
-    synchronize: true,
-  }), PelangganModule, PaymentMethodModule, BarangModule, CategoryBarangModule, SparepartModule, KerusakanModule, KeluhanModule, ImageBarangModule, PengirimanModule, InvoiceModule],
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '',
+      database: 'makersware_db',
+      entities: ["dist/**/*.entity{.ts,.js}"],
+      logging: true,
+      synchronize: true,
+    }), PelangganModule, PaymentMethodModule, BarangModule, CategoryBarangModule, SparepartModule, KerusakanModule, KeluhanModule, ImageBarangModule, PengirimanModule, InvoiceModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

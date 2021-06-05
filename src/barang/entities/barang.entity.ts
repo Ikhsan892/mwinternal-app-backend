@@ -38,6 +38,7 @@ export class Barang extends GlobalEntity {
     @ManyToOne(() => CategoryBarang, cr => cr.barang)
     category : CategoryBarang;
 
+    // Many to Many
     @ManyToMany(() => Sparepart)
     @JoinTable()
     sparepart: Sparepart[];
