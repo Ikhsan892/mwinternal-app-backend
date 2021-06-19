@@ -1,26 +1,90 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { getManager, Repository } from 'typeorm';
 import { CreatePelangganDto } from './dto/create-pelanggan.dto';
+import { DeleteDTO } from './dto/delete-massive.dto';
 import { UpdatePelangganDto } from './dto/update-pelanggan.dto';
+import { Pelanggan } from './entities/pelanggan.entity';
+import { data } from './mock/pelanggan.mock'
 
 @Injectable()
 export class PelangganService {
-  create(createPelangganDto: CreatePelangganDto) {
-    return 'This action adds a new pelanggan';
+
+  constructor(
+    @InjectRepository(Pelanggan)
+    private pelangganService: Repository<Pelanggan>
+  ) { }
+
+
+  async insertMany(): Promise<any> {
+    data.map(async (i) => {
+      let pelanggan = new Pelanggan();
+      pelanggan.no_telepon = i.no_telepon.toString();
+      pelanggan.nama_depan = i.nama_depan;
+      pelanggan.nama_belakang = i.nama_belakang;
+      pelanggan.umur = i.umur.toString();
+      pelanggan.alamat = i.alamat;
+      pelanggan.provinsi = i.provinsi;
+      pelanggan.email = i.email;
+      pelanggan.kecamatan = i.kecamatan;
+      pelanggan.kota_kabupaten = i.kota_kabupaten;
+      pelanggan.gender = i.gender;
+      pelanggan.negara = i.negara;
+      await this.pelangganService.save(pelanggan);
+    });
+    return 201;
   }
 
-  findAll() {
-    return `This action returns all pelanggan`;
+
+  async create(createPelangganDto: CreatePelangganDto): Promise<any> {
+    try {
+      let find_email = await this.pelangganService.find({
+        where: {
+          email: createPelangganDto.email
+        }
+      });
+      if (find_email.length > 0) {
+        return {
+          status: 403,
+          message: "Email already registered"
+        }
+      } else {
+        await this.pelangganService.save(createPelangganDto)
+        return {
+          status: 201,
+          message: "Success inserting customer"
+        }
+      }
+    } catch (error) {
+      return new InternalServerErrorException()
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pelanggan`;
+  async findAll(): Promise<any> {
+    return await this.pelangganService.find()
   }
 
-  update(id: number, updatePelangganDto: UpdatePelangganDto) {
-    return `This action updates a #${id} pelanggan`;
+  async findOne(id: number): Promise<any> {
+    return await this.pelangganService.findOne({
+      where: {
+        id
+      },
+      relations: ['invoice']
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pelanggan`;
+  async update(id: number, updatePelangganDto: UpdatePelangganDto): Promise<any> {
+    return await this.pelangganService.update({ id }, updatePelangganDto)
+  }
+
+  async remove(id: number): Promise<any> {
+    return await this.pelangganService.softDelete(id)
+  }
+
+  async removeMassive(data: DeleteDTO): Promise<any> {
+    data.id.map(async (i) => {
+      await this.pelangganService.softDelete(i);
+    });
+    return data;
   }
 }

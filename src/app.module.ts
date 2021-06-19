@@ -16,9 +16,12 @@ import { ImageBarangModule } from './image-barang/image-barang.module';
 import { PengirimanModule } from './pengiriman/pengiriman.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { AuthModule } from './auth/auth.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [UserModule, RoleModule,
+  imports: [
+    UserModule,
+    RoleModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -28,8 +31,22 @@ import { AuthModule } from './auth/auth.module';
       database: 'makersware_db',
       entities: ["dist/**/*.entity{.ts,.js}"],
       logging: true,
-      synchronize: true,
-    }), PelangganModule, PaymentMethodModule, BarangModule, CategoryBarangModule, SparepartModule, KerusakanModule, KeluhanModule, ImageBarangModule, PengirimanModule, InvoiceModule, AuthModule],
+      synchronize: true
+    }),
+    PelangganModule,
+    PaymentMethodModule,
+    BarangModule,
+    CategoryBarangModule,
+    SparepartModule,
+    KerusakanModule,
+    KeluhanModule,
+    ImageBarangModule,
+    PengirimanModule,
+    InvoiceModule,
+    AuthModule,
+    MulterModule.register({
+      dest: './upload',
+    }),],
   controllers: [AppController],
   providers: [AppService],
 })

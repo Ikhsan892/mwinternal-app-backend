@@ -1,14 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
 import { BarangService } from './barang.service';
 import { CreateBarangDto } from './dto/create-barang.dto';
 import { UpdateBarangDto } from './dto/update-barang.dto';
 
 @Controller('barang')
 export class BarangController {
-  constructor(private readonly barangService: BarangService) {}
+  constructor(private readonly barangService: BarangService) { }
 
-  @Post()
-  create(@Body() createBarangDto: CreateBarangDto) {
+  @Post('new-request')
+  create(@Body(new ValidationPipe()) createBarangDto: CreateBarangDto) {
     return this.barangService.create(createBarangDto);
   }
 

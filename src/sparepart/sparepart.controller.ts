@@ -1,14 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
 import { SparepartService } from './sparepart.service';
 import { CreateSparepartDto } from './dto/create-sparepart.dto';
 import { UpdateSparepartDto } from './dto/update-sparepart.dto';
 
 @Controller('sparepart')
 export class SparepartController {
-  constructor(private readonly sparepartService: SparepartService) {}
+  constructor(private readonly sparepartService: SparepartService) { }
 
   @Post()
-  create(@Body() createSparepartDto: CreateSparepartDto) {
+  create(@Body(new ValidationPipe()) createSparepartDto: CreateSparepartDto) {
     return this.sparepartService.create(createSparepartDto);
   }
 

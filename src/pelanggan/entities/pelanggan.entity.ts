@@ -7,24 +7,42 @@ import { Gender } from "../enum/gender.enum";
 @Entity()
 export class Pelanggan extends GlobalEntity {
     @Column()
-    nama_pelanggan : string;
+    nama_depan: string;
 
     @Column()
-    email : string;
+    nama_belakang: string;
 
     @Column()
-    phone : string;
+    email: string;
 
     @Column()
-    address : string;
+    no_telepon: string;
 
     @Column()
-    gender : Gender;
+    alamat: string;
+
+    @Column()
+    gender: string;
+
+    @Column()
+    umur: string;
+
+    @Column()
+    negara: string;
+
+    @Column()
+    provinsi: string;
+
+    @Column()
+    kota_kabupaten: string;
+
+    @Column()
+    kecamatan: string;
 
     @OneToMany(() => Barang, cr => cr.pelanggan)
-    barang : Barang[]
+    barang: Barang[];
 
     @OneToMany(() => Invoice, cr => cr.pelanggan)
-    invoice : Invoice[];
-    
+    invoice: Invoice[];
+
 }

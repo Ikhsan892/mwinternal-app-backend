@@ -12,31 +12,34 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typ
 @Entity()
 export class Barang extends GlobalEntity {
     @Column()
-    nama_barang : string;
+    ref: string;
 
     @Column()
-    merk_hp : string;
+    nama_barang: string;
 
     @Column()
-    tipe_hp  :string;
+    merk_hp: string;
 
     @Column()
-    status : string;
+    tipe_hp: string;
+
+    @Column()
+    status: string;
 
     @ManyToOne(() => Pelanggan, cr => cr.barang)
-    pelanggan : Pelanggan;
+    pelanggan: Pelanggan;
 
     @ManyToOne(() => User, cr => cr.created_by)
-    created_by : User;
+    created_by: User;
 
     @ManyToOne(() => User, cr => cr.teknisi)
-    teknisi : User;
+    teknisi: User;
 
     @ManyToOne(() => User, cr => cr.admin)
-    admin : User;
+    admin: User;
 
     @ManyToOne(() => CategoryBarang, cr => cr.barang)
-    category : CategoryBarang;
+    category: CategoryBarang;
 
     // Many to Many
     @ManyToMany(() => Sparepart)
@@ -44,14 +47,14 @@ export class Barang extends GlobalEntity {
     sparepart: Sparepart[];
 
     @OneToMany(() => Kerusakan, cr => cr.barang)
-    kerusakan : Kerusakan[];
+    kerusakan: Kerusakan[];
 
     @OneToMany(() => Keluhan, cr => cr.barang)
-    keluhan : Keluhan[]; 
+    keluhan: Keluhan[];
 
     @OneToMany(() => ImageBarang, cr => cr.barang)
-    image : ImageBarang[] 
+    image: ImageBarang[]
 
     @OneToMany(() => Invoice, cr => cr.barang)
-    invoice : Invoice[]
+    invoice: Invoice[]
 }

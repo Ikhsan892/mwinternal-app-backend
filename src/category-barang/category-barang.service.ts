@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateCategoryBarangDto } from './dto/create-category-barang.dto';
 import { UpdateCategoryBarangDto } from './dto/update-category-barang.dto';
+import { CategoryBarang } from './entities/category-barang.entity';
 
 @Injectable()
 export class CategoryBarangService {
-  create(createCategoryBarangDto: CreateCategoryBarangDto) {
-    return 'This action adds a new categoryBarang';
+
+  constructor(
+    @InjectRepository(CategoryBarang)
+    private categoryService: Repository<CategoryBarang>
+  ) { }
+
+  async create(createCategoryBarangDto: CreateCategoryBarangDto): Promise<any> {
+    try {
+      await this.categoryService.save(createCategoryBarangDto);
+      return {
+        status: 201,
+        message: "Success inserted category"
+      }
+    } catch (e) {
+      return new InternalServerErrorException()
+    }
   }
 
-  findAll() {
-    return `This action returns all categoryBarang`;
+  async findAll(): Promise<any> {
+    return await this.categoryService.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} categoryBarang`;
+  async findOne(id: number): Promise<any> {
+    return await this.categoryService.findOne({
+      where: {
+        id
+      }
+    })
   }
 
-  update(id: number, updateCategoryBarangDto: UpdateCategoryBarangDto) {
-    return `This action updates a #${id} categoryBarang`;
+  async update(id: number, updateCategoryBarangDto: UpdateCategoryBarangDto): Promise<any> {
+    return await this.categoryService.update({ id }, updateCategoryBarangDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} categoryBarang`;
+  async remove(id: number): Promise<any> {
+    return await this.categoryService.softDelete(id)
   }
 }
