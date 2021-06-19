@@ -8,9 +8,16 @@ export class PaymentMethod extends GlobalEntity {
     @Column()
     name_payment : string;
 
-    @Column()
+    @Column({
+        nullable : true
+    })
     image_path : string;
+
+    @Column()
+    aktif : Boolean;
 
     @OneToMany(() => Invoice, cr => cr.payment)
     invoice : Invoice[];
+
+
 }

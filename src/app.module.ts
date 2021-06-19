@@ -31,7 +31,7 @@ import { MulterModule } from '@nestjs/platform-express';
       database: 'makersware_db',
       entities: ["dist/**/*.entity{.ts,.js}"],
       logging: true,
-      synchronize: true
+      synchronize: false
     }),
     PelangganModule,
     PaymentMethodModule,
