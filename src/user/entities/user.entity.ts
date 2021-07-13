@@ -20,6 +20,9 @@ export class User extends GlobalEntity {
     @Column()
     phone: string;
 
+    @Column()
+    profile_path: string;
+
     @ManyToOne(() => Role, cr => cr.user)
     role: Role;
 

@@ -13,10 +13,12 @@ import { SparepartModule } from './sparepart/sparepart.module';
 import { KerusakanModule } from './kerusakan/kerusakan.module';
 import { KeluhanModule } from './keluhan/keluhan.module';
 import { ImageBarangModule } from './image-barang/image-barang.module';
-import { PengirimanModule } from './pengiriman/pengiriman.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { AuthModule } from './auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { BiayaTambahanModule } from './biaya-tambahan/biaya-tambahan.module';
+import { PengirimanModule } from './pengiriman/pengiriman.module';
+import { MenuModule } from './menu/menu.module';
 
 @Module({
   imports: [
@@ -40,13 +42,15 @@ import { MulterModule } from '@nestjs/platform-express';
     SparepartModule,
     KerusakanModule,
     KeluhanModule,
-    ImageBarangModule,
     PengirimanModule,
+    ImageBarangModule,
     InvoiceModule,
     AuthModule,
+    BiayaTambahanModule,
     MulterModule.register({
       dest: './upload',
-    }),],
+    }),
+    MenuModule,],
   controllers: [AppController],
   providers: [AppService],
 })

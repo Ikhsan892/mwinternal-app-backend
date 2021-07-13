@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } fro
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
 
 @Controller('role')
 export class RoleController {
@@ -22,13 +23,18 @@ export class RoleController {
     return this.roleService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body(new ValidationPipe()) updateRoleDto: UpdateRoleDto) {
-    return this.roleService.update(+id, updateRoleDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body(new ValidationPipe()) updateRoleDto: UpdateRoleDto) {
+  //   return this.roleService.update(+id, updateRoleDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.roleService.remove(+id);
+  }
+
+  @Delete()
+  removeMassive(@Body(new ValidationPipe()) body: DeleteDTO) {
+    return this.roleService.removeMassive(body);
   }
 }

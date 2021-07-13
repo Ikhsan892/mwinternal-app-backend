@@ -19,7 +19,8 @@ export class AuthService {
                 firstName: is_correct.firstName,
                 lastName: is_correct.lastName,
                 email: is_correct.email,
-                role: is_correct.role
+                role: is_correct.role,
+                avatar: is_correct.profile_path
             };
 
             return {
@@ -36,7 +37,8 @@ export class AuthService {
                 firstName: isCreated.firstName,
                 lastName: isCreated.lastName,
                 email: isCreated.email,
-                role: isCreated.role
+                role: isCreated.role,
+                avatar: isCreated.profile_path
             };
 
             return {

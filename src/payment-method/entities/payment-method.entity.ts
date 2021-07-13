@@ -6,18 +6,20 @@ import { Column, Entity, OneToMany } from "typeorm";
 @Entity()
 export class PaymentMethod extends GlobalEntity {
     @Column()
-    name_payment : string;
+    name_payment: string;
 
     @Column({
-        nullable : true
+        nullable: true
     })
-    image_path : string;
+    image_path: string;
 
-    @Column()
-    aktif : Boolean;
+    @Column({
+        default: false
+    })
+    aktif: Boolean;
 
     @OneToMany(() => Invoice, cr => cr.payment)
-    invoice : Invoice[];
+    invoice: Invoice[];
 
 
 }

@@ -13,67 +13,68 @@ export class PaymentMethodService {
     @InjectRepository(PaymentMethod)
     private paymentService: Repository<PaymentMethod>
   ) { }
-  async create(createPaymentMethodDto: CreatePaymentMethodDto) : Promise<any> {
+  async create(createPaymentMethodDto: CreatePaymentMethodDto, file: any): Promise<any> {
     let find_data = await this.paymentService.findOne({
-      where : {
-        name_payment : createPaymentMethodDto.name_payment
+      where: {
+        name_payment: createPaymentMethodDto.name_payment
       }
     })
 
     // Kalo gak ada
-    if(!find_data){
+    if (!find_data) {
       let payment = new PaymentMethod();
+      if (file) payment.image_path = `/${file.filename}`;
       payment.name_payment = createPaymentMethodDto.name_payment.toLowerCase();
-      payment.aktif = createPaymentMethodDto.aktif;
+      payment.aktif = Boolean(createPaymentMethodDto.aktif);
       await this.paymentService.save(payment);
       return {
-        status : HttpStatus.CREATED,
-        message : "Payment Method Created"
+        status: HttpStatus.CREATED,
+        message: "Payment Method Created"
       }
 
-    }else{
+    } else {
 
       return {
-        status : HttpStatus.CONFLICT,
-        message : "Payment Method already created"
+        status: HttpStatus.CONFLICT,
+        message: "Payment Method already created"
       }
     }
   }
 
-  async findAll() : Promise<PaymentMethod[]> {
+  async findAll(): Promise<PaymentMethod[]> {
     return await this.paymentService.find();
   }
 
-  async findOne(id: number) : Promise<PaymentMethod> {
+  async findOne(id: number): Promise<PaymentMethod> {
     return await this.paymentService.findOne({
-      where : {
-        id : id
+      where: {
+        id: id
       }
     })
   }
 
-  async update(id: number, updatePaymentMethodDto: UpdatePaymentMethodDto) : Promise<any> {
-    await this.paymentService.update({id}, {name_payment : updatePaymentMethodDto.name_payment})
+  async update(id: number, updatePaymentMethodDto: UpdatePaymentMethodDto, file: any): Promise<any> {
+    await this.paymentService.update({ id }, { name_payment: updatePaymentMethodDto.name_payment, image_path: file ? `/${file.filename}` : null })
     return {
-      status : HttpStatus.OK,
-      message : "Data has been updated"
+      status: HttpStatus.OK,
+      message: "Data has been updated"
     }
   }
 
-  async setActive(active: ActivePaymentMethodDto) : Promise<any> {
+  async setActive(active: ActivePaymentMethodDto): Promise<any> {
     let find = await this.paymentService.findOne({
-      where : {
-        id : active.id
+      where: {
+        id: active.id
       }
     })
-    await this.paymentService.update({id : active.id},{aktif : !find.aktif});
+    await this.paymentService.update({ id: active.id }, { aktif: !find.aktif });
     return {
-      status : HttpStatus.CREATED,
-      message : "Success Activating"
+      status: HttpStatus.CREATED,
+      message: "Success Activating"
     }
   }
 
-  async removeMassive(data : DeleteDTO) : Promise<any>{
+  async removeMassive(data: DeleteDTO): Promise<any> {
     data.id.map(async (i) => {
       await this.paymentService.softDelete(i);
     });
