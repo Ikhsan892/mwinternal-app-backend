@@ -11,6 +11,13 @@ export class AuthService {
         private jwtService: JwtService,
     ) { }
 
+    async redux(array, keys_to_keep: string[]): Promise<any[]> {
+        return array.map(o => keys_to_keep.reduce((acc, curr) => {
+            acc[curr] = o[curr];
+            return acc;
+        }, {}));
+    }
+
     async loginUser(data: LoginDto): Promise<any> {
         let is_correct = await this.usersService.login(data);
         if (is_correct.email) {
@@ -19,8 +26,9 @@ export class AuthService {
                 firstName: is_correct.firstName,
                 lastName: is_correct.lastName,
                 email: is_correct.email,
-                role: is_correct.role,
-                avatar: is_correct.profile_path
+                role: is_correct.role.nama_role,
+                avatar: is_correct.profile_path,
+                menu: await this.redux(is_correct.role.menu, ['link'])
             };
 
             return {
@@ -30,15 +38,16 @@ export class AuthService {
         }
     }
     async registerUser(data: CreateUserDto): Promise<any> {
-        let isCreated = await this.usersService.create(data)
+        let isCreated = await this.usersService.create(data);
         if (isCreated.firstName) {
             const payload = {
                 id: isCreated.id,
                 firstName: isCreated.firstName,
                 lastName: isCreated.lastName,
                 email: isCreated.email,
-                role: isCreated.role,
-                avatar: isCreated.profile_path
+                role: isCreated.role.nama_role,
+                avatar: isCreated.profile_path,
+                menu: await this.redux(isCreated.role.menu, ['link'])
             };
 
             return {

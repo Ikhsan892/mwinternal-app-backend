@@ -19,6 +19,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { BiayaTambahanModule } from './biaya-tambahan/biaya-tambahan.module';
 import { PengirimanModule } from './pengiriman/pengiriman.module';
 import { MenuModule } from './menu/menu.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { MenuModule } from './menu/menu.module';
       database: 'makersware_db',
       entities: ["dist/**/*.entity{.ts,.js}"],
       logging: true,
-      synchronize: false
+      synchronize: true
     }),
     PelangganModule,
     PaymentMethodModule,
@@ -50,7 +51,8 @@ import { MenuModule } from './menu/menu.module';
     MulterModule.register({
       dest: './upload',
     }),
-    MenuModule,],
+    MenuModule,
+    OrderModule,],
   controllers: [AppController],
   providers: [AppService],
 })

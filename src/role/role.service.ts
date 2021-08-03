@@ -54,9 +54,14 @@ export class RoleService {
 
   }
 
-  // async update(id: number, updateRoleDto: UpdateRoleDto): Promise<any> {
-  //   return await this.roleService.update({ id }, updateRoleDto)
-  // }
+  async update(id: number, updateRoleDto: UpdateRoleDto): Promise<any> {
+    let findData = await this.menuService.findBulk(updateRoleDto.menu);
+    let role = new Role();
+    role.id = id;
+    role.nama_role = updateRoleDto.nama_role;
+    role.menu = findData;
+    return await this.roleService.save(role);
+  }
 
   async remove(id: number): Promise<any> {
     return await this.roleService.softDelete({ id: id });

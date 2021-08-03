@@ -28,7 +28,7 @@ export class UserService {
         where: {
           id: hasil.id
         },
-        relations: ['role']
+        relations: ['role', 'role.menu']
       })
       return find_result;
     } else {
@@ -44,7 +44,7 @@ export class UserService {
       where: {
         email: user.email,
       },
-      relations: ['role'],
+      relations: ['role', 'role.menu'],
     });
 
     if (!email_correct) {

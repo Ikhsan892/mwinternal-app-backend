@@ -1,5 +1,6 @@
 import { GlobalEntity } from "src/global.entity";
 import { Invoice } from "src/invoice/entities/invoice.entity";
+import { Order } from "src/order/entities/order.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 
 
@@ -21,5 +22,6 @@ export class PaymentMethod extends GlobalEntity {
     @OneToMany(() => Invoice, cr => cr.payment)
     invoice: Invoice[];
 
-
+    @OneToMany(() => Order, cr => cr.payment)
+    order: Order[];
 }

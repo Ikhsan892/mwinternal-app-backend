@@ -34,6 +34,9 @@ export class PelangganService {
     });
     return 201;
   }
+  db() {
+    return this.pelangganService
+  }
 
 
   async create(createPelangganDto: CreatePelangganDto): Promise<any> {

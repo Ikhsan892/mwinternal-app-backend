@@ -7,6 +7,7 @@ import { Pelanggan } from './entities/pelanggan.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Pelanggan])],
   controllers: [PelangganController],
-  providers: [PelangganService]
+  providers: [PelangganService],
+  exports: [PelangganService, TypeOrmModule]
 })
 export class PelangganModule { }
