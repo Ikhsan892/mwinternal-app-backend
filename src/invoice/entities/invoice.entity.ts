@@ -6,46 +6,46 @@ import { Pengiriman } from "src/pengiriman/entities/pengiriman.entity";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 
 @Entity()
-export class Invoice extends GlobalEntity{
-    @ManyToOne(() => Barang, cr => cr.invoice)
-    barang : Barang;
+export class Invoice extends GlobalEntity {
+    // @ManyToOne(() => Barang, cr => cr.invoice)
+    // barang : Barang;
 
     @Column()
-    payment_status : string;
+    payment_status: string;
 
     @ManyToOne(() => PaymentMethod, cr => cr.invoice)
-    payment  : PaymentMethod;
+    payment: PaymentMethod;
 
     @Column()
-    jasa : number;
-    
+    jasa: number;
+
     @Column()
-    total : number;
+    total: number;
 
     /**
      * Untuk nominal waktu garansi
      */
     @Column()
-    garansi_length : number;
+    garansi_length: number;
 
     /**
      * garansi per bulan , minggu ,tahun
      */
     @Column()
-    garansi_due : string; 
+    garansi_due: string;
 
     @ManyToOne(() => Pengiriman, cr => cr.invoice)
-    pengiriman : Pengiriman;
+    pengiriman: Pengiriman;
 
     @ManyToOne(() => Pelanggan, cr => cr.invoice)
-    pelanggan : Pelanggan;
+    pelanggan: Pelanggan;
 
     @Column()
-    dp : number;
+    dp: number;
 
     @Column()
-    ongkir : number;
+    ongkir: number;
 
     @Column()
-    diskon : number; 
+    diskon: number;
 }

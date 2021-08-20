@@ -84,7 +84,7 @@ export class OrderService {
       where: {
         id: id
       },
-      relations: ['pelanggan', 'payment', 'pengiriman']
+      relations: ['pelanggan', 'payment', 'pengiriman', 'barang', 'barang.teknisi']
     });
   }
 

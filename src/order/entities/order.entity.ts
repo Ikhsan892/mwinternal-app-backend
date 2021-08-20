@@ -7,7 +7,6 @@ import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 
 @Entity()
 export class Order extends GlobalEntity {
-
     @ManyToOne(() => PaymentMethod, cr => cr.order)
     payment: PaymentMethod;
 
@@ -31,4 +30,7 @@ export class Order extends GlobalEntity {
         nullable: false
     })
     no_invoice: string;
+
+    @OneToMany(() => Barang, cr => cr.order)
+    barang: Barang[]
 }

@@ -10,15 +10,16 @@ export class UserController {
   detail(@Request() req) {
     return req.user
   }
+
   // @Post()
   // create(@Body() createUserDto: CreateUserDto) {
   //   return this.userService.create(createUserDto);
   // }
 
-  // @Get()
-  // findAll() {
-  //   return this.userService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.userService.findAll();
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

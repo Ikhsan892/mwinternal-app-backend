@@ -75,7 +75,9 @@ export class UserService {
   }
 
   async findAll(): Promise<any> {
-    return await this.usersRepository.find()
+    return await this.usersRepository.find({
+      relations: ['role']
+    })
   }
 
   async findOne(id: number): Promise<any> {
@@ -92,5 +94,9 @@ export class UserService {
 
   async remove(id: number): Promise<any> {
     return await this.usersRepository.softDelete(id)
+  }
+
+  db(): Repository<User> {
+    return this.usersRepository;
   }
 }

@@ -26,12 +26,7 @@ export class User extends GlobalEntity {
     @ManyToOne(() => Role, cr => cr.user)
     role: Role;
 
-    @OneToMany(() => Barang, cr => cr.created_by)
-    created_by: Barang[];
-
     @OneToMany(() => Barang, cr => cr.teknisi)
     teknisi: Barang[];
 
-    @OneToMany(() => Barang, cr => cr.admin)
-    admin: Barang[];
 }

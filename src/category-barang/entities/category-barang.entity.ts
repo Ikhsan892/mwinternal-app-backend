@@ -4,13 +4,13 @@ import { Sparepart } from "src/sparepart/entities/sparepart.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity()
-export class CategoryBarang extends GlobalEntity{
+export class CategoryBarang extends GlobalEntity {
     @Column()
-    nama_category : string;
+    nama_category: string;
 
-    @OneToMany(() => Barang, cr => cr.category)
-    barang : Barang[]
+    // @OneToMany(() => Barang, cr => cr.category)
+    // barang : Barang[]
 
     @OneToMany(() => Sparepart, cr => cr.category)
-    sparepart : Sparepart[]
+    sparepart: Sparepart[]
 };

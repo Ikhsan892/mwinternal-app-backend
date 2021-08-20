@@ -1,4 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
+import { editFileName, exeFileFilter } from 'src/utils';
 import { BarangService } from './barang.service';
 import { CreateBarangDto } from './dto/create-barang.dto';
 import { UpdateBarangDto } from './dto/update-barang.dto';
@@ -7,9 +11,17 @@ import { UpdateBarangDto } from './dto/update-barang.dto';
 export class BarangController {
   constructor(private readonly barangService: BarangService) { }
 
-  @Post('new-request')
-  create(@Body(new ValidationPipe()) createBarangDto: CreateBarangDto) {
-    return this.barangService.create(createBarangDto);
+  @Post()
+  @UseInterceptors(FilesInterceptor('file', 10, {
+    storage: diskStorage({
+      destination: './dist/app/files',
+      filename: editFileName,
+    }),
+    fileFilter: exeFileFilter,
+  }))
+  create(@Body(new ValidationPipe()) createBarangDto: CreateBarangDto, @UploadedFiles()
+  file: Array<Express.Multer.File>) {
+    return this.barangService.create(createBarangDto, file);
   }
 
   @Get()
@@ -30,5 +42,10 @@ export class BarangController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.barangService.remove(+id);
+  }
+
+  @Delete()
+  removeMassive(@Body(new ValidationPipe()) payload: DeleteDTO) {
+    return this.barangService.removeMassive(payload);
   }
 }
