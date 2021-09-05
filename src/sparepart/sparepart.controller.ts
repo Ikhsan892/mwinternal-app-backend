@@ -1,16 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
-import { SparepartService } from './sparepart.service';
-import { CreateSparepartDto } from './dto/create-sparepart.dto';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
 import { UpdateSparepartDto } from './dto/update-sparepart.dto';
+import { SparepartService } from './sparepart.service';
 
 @Controller('sparepart')
 export class SparepartController {
-  constructor(private readonly sparepartService: SparepartService) { }
-
-  @Post()
-  create(@Body(new ValidationPipe()) createSparepartDto: CreateSparepartDto) {
-    return this.sparepartService.create(createSparepartDto);
-  }
+  constructor(private readonly sparepartService: SparepartService) {}
 
   @Get()
   findAll() {
@@ -23,7 +17,10 @@ export class SparepartController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSparepartDto: UpdateSparepartDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSparepartDto: UpdateSparepartDto,
+  ) {
     return this.sparepartService.update(+id, updateSparepartDto);
   }
 

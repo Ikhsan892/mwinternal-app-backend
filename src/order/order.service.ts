@@ -1,5 +1,6 @@
 import { HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
 import { Pelanggan } from 'src/pelanggan/entities/pelanggan.entity';
 import { PelangganService } from 'src/pelanggan/pelanggan.service';
 import { Repository } from 'typeorm';
@@ -60,6 +61,9 @@ export class OrderService {
         order.pengiriman = null;
         order.status = "new-request";
         order.no_invoice = createOrderDto.no_invoice;
+        order.year = new Date(createOrderDto.tanggal_invoice).getFullYear()
+        order.month = new Date(createOrderDto.tanggal_invoice).getMonth()
+        order.tipe = createOrderDto.tipe
         order.tanggal_invoice = createOrderDto.tanggal_invoice;
         let saved = await this.orderService.save(order);
         return {
@@ -92,7 +96,14 @@ export class OrderService {
     return `This action updates a #${id} order`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async removeMassive(data : DeleteDTO) : Promise<any>{
+    data.id.map(async (i) => {
+      await this.orderService.softDelete(i);
+    });
+    return data;
+  }
+
+  async remove(id: number) : Promise<any> {
+    return await this.orderService.softDelete(id);
   }
 }

@@ -5,6 +5,9 @@ export class CreateOrderDto extends CreatePelangganDto {
     @IsString()
     no_invoice: string;
 
+    @IsString()
+    tipe: TipeOrderan;
+
     @IsDateString()
     tanggal_invoice: Date;
 }

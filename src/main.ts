@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 // import * as fs from 'fs';
-// import * as path from 'path'
+// import * as path from 'path' 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -11,10 +11,9 @@ async function bootstrap() {
     AppModule,
   );
 
-  app.enableCors({ origin: ['http://localhost:3001'] });
+  app.enableCors({ origin: ['http://localhost:3001','http://192.168.1.103:3001'] });
   app.useStaticAssets(join(__dirname, '..', '/dist/app/files'));
   app.setGlobalPrefix('api');
-  console.log(join(__dirname, '..', '/dist/app/files'))
   await app.listen(3000);
 
   // let customer = 'ahmad';

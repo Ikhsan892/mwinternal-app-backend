@@ -82,6 +82,43 @@ export class BarangService {
     return `This action updates a #${id} barang`;
   }
 
+  async updateBarang(updateBarangDto : UpdateBarangDto,files : Array<Express.Multer.File>) : Promise<any>{
+
+      let teknisis = updateBarangDto.teknisi.split(',').map((i) => parseInt(i))
+
+      let find_teknisi = await this.userService.db().find({
+        where: {
+          id: In(teknisis)
+        }
+      })
+
+      let barang = new Barang()
+      barang.id = parseInt(updateBarangDto.id);
+      barang.keluhan = updateBarangDto.keluhan
+      barang.merk = updateBarangDto.merk
+      barang.nama_barang = updateBarangDto.nama_barang
+      barang.order = updateBarangDto.order
+      barang.jenis_barang = updateBarangDto.jenis_barang
+      barang.pelanggan = updateBarangDto.pelanggan
+      barang.spesifikasi = updateBarangDto.spesifikasi
+      barang.status = updateBarangDto.status
+      barang.teknisi = find_teknisi;
+      let data = await this.barangService.save(barang)
+
+      // Delete Image yang dihidden
+      let current_images = JSON.parse(updateBarangDto.images);
+      await this.imageService.deleteIfHidden(current_images,data.id);
+
+      if (files.length > 0) {
+        await this.imageService.createBulk(files, data.id)
+      }
+
+    return {
+      status: 201,
+      message: "Success update Barang"
+    }
+  }    
+
   remove(id: number) {
     return `This action removes a #${id} barang`;
   }

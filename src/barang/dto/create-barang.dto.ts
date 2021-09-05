@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from "class-validator";
+import { IsString } from "class-validator";
 
 export class CreateBarangDto {
     @IsString()
@@ -19,7 +19,6 @@ export class CreateBarangDto {
 
     @IsString()
     keluhan: string
-
 
     pelanggan: any
     teknisi: any

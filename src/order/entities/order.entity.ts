@@ -22,6 +22,21 @@ export class Order extends GlobalEntity {
     status: string;
 
     @Column({
+        nullable: true,
+    })
+    year: number;
+
+    @Column({
+        nullable: true,
+    })
+    tipe: TipeOrderan;
+
+    @Column({
+        nullable: true,
+    })
+    month: number;
+
+    @Column({
         nullable: false
     })
     tanggal_invoice: Date

@@ -8,6 +8,6 @@ import { Sparepart } from './entities/sparepart.entity';
   imports: [TypeOrmModule.forFeature([Sparepart])],
   controllers: [SparepartController],
   providers: [SparepartService],
-  exports: [SparepartService]
+  exports: [SparepartService],
 })
-export class SparepartModule { }
+export class SparepartModule {}
