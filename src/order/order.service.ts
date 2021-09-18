@@ -103,7 +103,7 @@ export class OrderService {
       // Kalo diliat detailnya tapi masih new request
       await this.orderService.update(
         { id: id },
-        { status: 'menunggu pembayaran' },
+        { status: 'menunggu kepastian' },
       );
     }
     return data;
