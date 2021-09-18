@@ -43,6 +43,12 @@ export class Sparepart extends GlobalEntity {
 
   @Column({
     nullable: false,
+    default: 'sparepart',
+  })
+  tipe_barang: string;
+
+  @Column({
+    nullable: false,
     default: 0,
   })
   harga_beli: number;

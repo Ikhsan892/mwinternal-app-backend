@@ -4,6 +4,11 @@ import { UpdateInventoryDto } from './dto/update-inventory.dto';
 import { ProductService } from 'src/product/product.service';
 import { ImageBarangService } from 'src/image-barang/image-barang.service';
 import { SparepartService } from 'src/sparepart/sparepart.service';
+import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
+import { TipeBarang } from 'src/product/enum/tipe-barang.enum';
+import { Sparepart } from 'src/sparepart/entities/sparepart.entity';
+import { Product } from 'src/product/entities/product.entity';
+import { DeleteSingleDTO } from './dto/delete-single.dto';
 
 @Injectable()
 export class InventoryService {
@@ -76,19 +81,75 @@ export class InventoryService {
     }
   }
 
-  findAll() {
-    return `This action returns all inventory`;
+  async findAll(): Promise<any> {
+    let products = await this.productService.findAll();
+    let spareparts = await this.sparepartService.findAll();
+    return products.concat(spareparts);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} inventory`;
+  async findOne(
+    nama_barang: string,
+    tipe_barang: string,
+  ): Promise<Sparepart | Product> {
+    if (
+      tipe_barang === TipeBarang.ACCESSORIES ||
+      tipe_barang === TipeBarang.PRODUK
+    ) {
+      return await this.productService.db().findOne({
+        where: {
+          nama_barang: nama_barang,
+        },
+        relations: ['image'],
+      });
+    } else if (tipe_barang === TipeBarang.SPAREPART) {
+      return await this.sparepartService.db().findOne({
+        where: {
+          nama_barang: nama_barang,
+        },
+        relations: ['image'],
+      });
+    }
   }
 
   update(id: number, updateInventoryDto: UpdateInventoryDto) {
     return `This action updates a #${id} inventory`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} inventory`;
+  async remove(deleteInventoryDto: DeleteDTO): Promise<void> {
+    deleteInventoryDto.id.map(async (data) => {
+      let { id, tipe_barang } = JSON.parse(data);
+      if (tipe_barang === TipeBarang.SPAREPART) {
+        await this.sparepartService.db().softDelete(id);
+      } else if (
+        tipe_barang === TipeBarang.PRODUK ||
+        tipe_barang === TipeBarang.ACCESSORIES
+      ) {
+        await this.productService.db().softDelete(id);
+      }
+    });
+  }
+
+  async removeOne(
+    deleteInventoryDto: DeleteSingleDTO,
+  ): Promise<{ deleted: boolean; data: any }> {
+    try {
+      let { id, tipe_barang } = deleteInventoryDto;
+      let query_delete;
+      if (tipe_barang === TipeBarang.SPAREPART) {
+        query_delete = await this.sparepartService.db().softDelete(id);
+      } else if (
+        tipe_barang === TipeBarang.PRODUK ||
+        tipe_barang === TipeBarang.ACCESSORIES
+      ) {
+        query_delete = await this.productService.db().softDelete(id);
+      }
+
+      return {
+        deleted: true,
+        data: query_delete,
+      };
+    } catch (error: any) {
+      return { deleted: false, data: error.message };
+    }
   }
 }

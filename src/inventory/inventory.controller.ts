@@ -18,6 +18,9 @@ import { UpdateInventoryDto } from './dto/update-inventory.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, exeFileFilter } from 'src/utils';
+import { Public } from 'src/auth/public.guard';
+import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
+import { DeleteSingleDTO } from './dto/delete-single.dto';
 
 @Controller('inventory')
 export class InventoryController {
@@ -43,13 +46,25 @@ export class InventoryController {
   }
 
   @Get()
-  findAll() {
-    return this.inventoryService.findAll();
+  async findAll(@Res() response: Response) {
+    let data = await this.inventoryService.findAll();
+    return response.status(201).json(data);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.inventoryService.findOne(+id);
+  @Get(':nama_barang/:tipe_barang')
+  @Public()
+  async findOne(
+    @Param('nama_barang') nama_barang: string,
+    @Param('tipe_barang') tipe_barang: string,
+    @Res() response: Response,
+  ) {
+    let data = await this.inventoryService.findOne(nama_barang, tipe_barang);
+
+    if (!data) {
+      return response.status(201).json({ message: 'data not found' });
+    } else {
+      return response.status(200).json({ message: 'found', data: data });
+    }
   }
 
   @Patch(':id')
@@ -60,8 +75,38 @@ export class InventoryController {
     return this.inventoryService.update(+id, updateInventoryDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.inventoryService.remove(+id);
+  @Delete('')
+  async remove(
+    @Res() response: Response,
+    @Body(new ValidationPipe()) deleteInventoryDto: DeleteDTO,
+  ) {
+    try {
+      await this.inventoryService.remove(deleteInventoryDto);
+      return response.status(200).json({ message: 'Data has been deleted' });
+    } catch (error: any) {
+      return response
+        .status(422)
+        .json({ message: 'Something wrong while deleting' });
+    }
+  }
+
+  @Delete('/single')
+  async RemoveOne(
+    @Res() response: Response,
+    @Body(new ValidationPipe()) deleteSingleDto: DeleteSingleDTO,
+  ) {
+    let return_data = await this.inventoryService.removeOne(deleteSingleDto);
+    if (return_data.deleted) {
+      return response
+        .status(200)
+        .json({ message: 'data Hass ben deleted', data: return_data.data });
+    } else {
+      return response
+        .status(422)
+        .json({
+          message: 'Something Wrong while deleting data',
+          data: return_data.data,
+        });
+    }
   }
 }

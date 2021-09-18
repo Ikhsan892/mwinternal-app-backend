@@ -24,12 +24,25 @@ export class SparepartService {
     if (find_duplicate) {
       return new Error('Sparepart sudah ada');
     } else {
-      return await this.sparepartService.save(createSparepartDto);
+      let sparepart = new Sparepart();
+      sparepart.nama_barang = createSparepartDto.nama_barang;
+      sparepart.merk_barang = createSparepartDto.merk_barang;
+      sparepart.tipe_barang = createSparepartDto.tipe_barang;
+      sparepart.stok = createSparepartDto.stok;
+      sparepart.harga_beli = createSparepartDto.harga_beli;
+      sparepart.harga_jual = createSparepartDto.harga_jual;
+      sparepart.deskripsi = createSparepartDto.deskripsi;
+      sparepart.disabled =
+        createSparepartDto.disabled === 'true' ? true : false;
+      sparepart.category = null;
+      return await this.sparepartService.save(sparepart);
     }
   }
 
   async findAll(): Promise<any> {
-    return await this.sparepartService.find();
+    return await this.sparepartService.find({
+      relations: ['image'],
+    });
   }
 
   async findOne(id: number): Promise<any> {
@@ -40,6 +53,11 @@ export class SparepartService {
 
   async findBulk(data: number[]): Promise<any> {
     return await this.sparepartService.findByIds(data);
+  }
+
+  // Connector DB
+  db() {
+    return this.sparepartService;
   }
 
   async update(

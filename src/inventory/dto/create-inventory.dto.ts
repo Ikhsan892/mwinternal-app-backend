@@ -12,7 +12,7 @@ export class CreateInventoryDto {
   tipe_barang: TipeBarang;
 
   @IsString()
-  disabled: boolean;
+  disabled: string;
 
   @IsString()
   spesifikasi_barang: string;

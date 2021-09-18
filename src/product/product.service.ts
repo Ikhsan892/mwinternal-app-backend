@@ -33,15 +33,21 @@ export class ProductService {
         +createProductDto.harga_jual - +createProductDto.harga_beli,
       );
       product.deskripsi = createProductDto.deskripsi;
-      product.disabled = createProductDto.disabled;
+      product.disabled = createProductDto.disabled === 'false' ? false : true;
       product.category = null;
       let _product = this.productService.save(product);
       return _product;
     }
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAll(): Promise<Product[]> {
+    return await this.productService.find({
+      relations: ['image'],
+    });
+  }
+
+  db() {
+    return this.productService;
   }
 
   findOne(id: number) {
