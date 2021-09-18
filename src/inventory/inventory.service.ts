@@ -81,6 +81,81 @@ export class InventoryService {
     }
   }
 
+  async updateData(
+    updateInventory: UpdateInventoryDto,
+    files: Array<Express.Multer.File>,
+  ): Promise<{ status: any; message: any }> {
+    let current_images = JSON.parse(updateInventory.images);
+    await this.imageService.deleteIfHidden(current_images, 0);
+    switch (updateInventory.tipe_barang) {
+      case 'accessories':
+        let acc = await this.productService.updateData(
+          updateInventory,
+          updateInventory.id,
+        );
+        if (acc instanceof Error) {
+          return {
+            status: HttpStatus.CONFLICT,
+            message: acc.message,
+          };
+        } else {
+          if (files.length > 0) {
+            await this.imageService.createProduct(files, acc.id);
+          }
+          return {
+            status: HttpStatus.OK,
+            message: 'Succes Insert inventory Accessories',
+          };
+        }
+
+      case 'sparepart':
+        let spr = await this.sparepartService.updateData(
+          updateInventory,
+          updateInventory.id,
+        );
+        if (spr instanceof Error) {
+          return {
+            status: HttpStatus.CONFLICT,
+            message: spr.message,
+          };
+        } else {
+          if (files.length > 0) {
+            await this.imageService.createSparepart(files, spr.id);
+          }
+          return {
+            status: HttpStatus.OK,
+            message: 'Succes Insert inventory Sparepart',
+          };
+        }
+
+      case 'produk':
+        let prod = await this.productService.updateData(
+          updateInventory,
+          updateInventory.id,
+        );
+        if (prod instanceof Error) {
+          return {
+            status: HttpStatus.CONFLICT,
+            message: prod.message,
+          };
+        } else {
+          if (files.length > 0) {
+            await this.imageService.createProduct(files, prod.id);
+          }
+          return {
+            status: HttpStatus.OK,
+            message: 'Succes Insert inventory Accessories',
+          };
+        }
+
+      default:
+        return {
+          status: HttpStatus.FORBIDDEN,
+          message: 'Undefined tipe_barang',
+        };
+    }
+  }
+
   async findAll(): Promise<any> {
     let products = await this.productService.findAll();
     let spareparts = await this.sparepartService.findAll();

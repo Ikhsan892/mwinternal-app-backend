@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateInventoryDto } from 'src/inventory/dto/create-inventory.dto';
+import { UpdateInventoryDto } from 'src/inventory/dto/update-inventory.dto';
 import { Repository } from 'typeorm';
 import { UpdateSparepartDto } from './dto/update-sparepart.dto';
 import { Sparepart } from './entities/sparepart.entity';
@@ -32,10 +33,35 @@ export class SparepartService {
       sparepart.harga_beli = createSparepartDto.harga_beli;
       sparepart.harga_jual = createSparepartDto.harga_jual;
       sparepart.deskripsi = createSparepartDto.deskripsi;
+      sparepart.spesifikasi_barang = createSparepartDto.spesifikasi_barang;
       sparepart.disabled =
         createSparepartDto.disabled === 'true' ? true : false;
       sparepart.category = null;
       return await this.sparepartService.save(sparepart);
+    }
+  }
+
+  async updateData(
+    updateSparepartDto: UpdateInventoryDto,
+    id: any,
+  ): Promise<Sparepart | Error> {
+    try {
+      let sparepart = new Sparepart();
+      sparepart.id = +id;
+      sparepart.nama_barang = updateSparepartDto.nama_barang;
+      sparepart.merk_barang = updateSparepartDto.merk_barang;
+      sparepart.tipe_barang = updateSparepartDto.tipe_barang;
+      sparepart.stok = updateSparepartDto.stok;
+      sparepart.harga_beli = updateSparepartDto.harga_beli;
+      sparepart.harga_jual = updateSparepartDto.harga_jual;
+      sparepart.deskripsi = updateSparepartDto.deskripsi;
+      sparepart.spesifikasi_barang = updateSparepartDto.spesifikasi_barang;
+      sparepart.disabled =
+        updateSparepartDto.disabled === 'true' ? true : false;
+      sparepart.category = null;
+      return await this.sparepartService.save(sparepart);
+    } catch (err: any) {
+      return new Error('Error while updating sparepart');
     }
   }
 

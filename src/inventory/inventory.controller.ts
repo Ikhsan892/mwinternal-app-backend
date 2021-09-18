@@ -10,6 +10,7 @@ import {
   Response as Res,
   UseInterceptors,
   UploadedFiles,
+  Put,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { InventoryService } from './inventory.service';
@@ -18,7 +19,6 @@ import { UpdateInventoryDto } from './dto/update-inventory.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, exeFileFilter } from 'src/utils';
-import { Public } from 'src/auth/public.guard';
 import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
 import { DeleteSingleDTO } from './dto/delete-single.dto';
 
@@ -52,7 +52,6 @@ export class InventoryController {
   }
 
   @Get(':nama_barang/:tipe_barang')
-  @Public()
   async findOne(
     @Param('nama_barang') nama_barang: string,
     @Param('tipe_barang') tipe_barang: string,
@@ -73,6 +72,26 @@ export class InventoryController {
     @Body() updateInventoryDto: UpdateInventoryDto,
   ) {
     return this.inventoryService.update(+id, updateInventoryDto);
+  }
+
+  @Put('')
+  @UseInterceptors(
+    FilesInterceptor('file', 10, {
+      storage: diskStorage({
+        destination: './dist/app/files',
+        filename: editFileName,
+      }),
+      fileFilter: exeFileFilter,
+    }),
+  )
+  async updateBarang(
+    @Body(new ValidationPipe()) payload: UpdateInventoryDto,
+    @UploadedFiles()
+    file: Array<Express.Multer.File>,
+    @Res() response: Response,
+  ) {
+    let data = await this.inventoryService.updateData(payload, file);
+    return response.status(data.status).json({ message: data.message });
   }
 
   @Delete('')
@@ -101,12 +120,10 @@ export class InventoryController {
         .status(200)
         .json({ message: 'data Hass ben deleted', data: return_data.data });
     } else {
-      return response
-        .status(422)
-        .json({
-          message: 'Something Wrong while deleting data',
-          data: return_data.data,
-        });
+      return response.status(422).json({
+        message: 'Something Wrong while deleting data',
+        data: return_data.data,
+      });
     }
   }
 }
