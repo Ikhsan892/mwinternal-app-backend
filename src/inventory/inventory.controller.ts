@@ -21,6 +21,7 @@ import { diskStorage } from 'multer';
 import { editFileName, exeFileFilter } from 'src/utils';
 import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
 import { DeleteSingleDTO } from './dto/delete-single.dto';
+import { Public } from 'src/auth/public.guard';
 
 @Controller('inventory')
 export class InventoryController {
@@ -49,6 +50,14 @@ export class InventoryController {
   async findAll(@Res() response: Response) {
     let data = await this.inventoryService.findAll();
     return response.status(201).json(data);
+  }
+
+  @Get('/active')
+  async findActive(@Res() response: Response) {
+    let { products, spareparts } = await this.inventoryService.findActive();
+
+    let gabungan = products.concat(spareparts);
+    return response.status(201).json(gabungan);
   }
 
   @Get(':nama_barang/:tipe_barang')

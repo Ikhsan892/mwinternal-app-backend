@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UploadedFile,
+  UseInterceptors,
+  ValidationPipe,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
@@ -10,19 +21,23 @@ import { PaymentMethodService } from './payment-method.service';
 
 @Controller('payment-method')
 export class PaymentMethodController {
-  constructor(private readonly paymentMethodService: PaymentMethodService) { }
-
+  constructor(private readonly paymentMethodService: PaymentMethodService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './dist/app/files',
-      filename: editFileName,
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './dist/app/files',
+        filename: editFileName,
+      }),
+      fileFilter: exeFileFilter,
     }),
-    fileFilter: exeFileFilter,
-  }))
-  create(@Body(new ValidationPipe()) createPaymentMethodDto: CreatePaymentMethodDto, @UploadedFile()
-  file: Express.Multer.File,) {
+  )
+  create(
+    @Body(new ValidationPipe()) createPaymentMethodDto: CreatePaymentMethodDto,
+    @UploadedFile()
+    file: Express.Multer.File,
+  ) {
     return this.paymentMethodService.create(createPaymentMethodDto, file);
   }
 
@@ -31,26 +46,39 @@ export class PaymentMethodController {
     return this.paymentMethodService.findAll();
   }
 
+  @Get('active')
+  findActive() {
+    return this.paymentMethodService.findActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.paymentMethodService.findOne(+id);
   }
 
   @Put()
-  active(@Body(new ValidationPipe()) updatePaymentMethodDto: ActivePaymentMethodDto) {
+  active(
+    @Body(new ValidationPipe()) updatePaymentMethodDto: ActivePaymentMethodDto,
+  ) {
     return this.paymentMethodService.setActive(updatePaymentMethodDto);
   }
 
   @Put(':id')
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './dist/app/files',
-      filename: editFileName,
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './dist/app/files',
+        filename: editFileName,
+      }),
+      fileFilter: exeFileFilter,
     }),
-    fileFilter: exeFileFilter,
-  }))
-  update(@Param('id') id: string, @Body(new ValidationPipe()) updatePaymentMethodDto: UpdatePaymentMethodDto, @UploadedFile()
-  file: Express.Multer.File,) {
+  )
+  update(
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updatePaymentMethodDto: UpdatePaymentMethodDto,
+    @UploadedFile()
+    file: Express.Multer.File,
+  ) {
     return this.paymentMethodService.update(+id, updatePaymentMethodDto, file);
   }
 

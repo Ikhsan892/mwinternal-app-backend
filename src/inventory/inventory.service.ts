@@ -162,6 +162,13 @@ export class InventoryService {
     return products.concat(spareparts);
   }
 
+  async findActive(): Promise<any> {
+    let products = await this.productService.findActive();
+    let spareparts = await this.sparepartService.findActive();
+
+    return { products: products, spareparts: spareparts };
+  }
+
   async findOne(
     nama_barang: string,
     tipe_barang: string,

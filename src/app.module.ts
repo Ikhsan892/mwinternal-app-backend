@@ -21,6 +21,7 @@ import { ProductModule } from './product/product.module';
 import { RoleModule } from './role/role.module';
 import { SparepartModule } from './sparepart/sparepart.module';
 import { UserModule } from './user/user.module';
+import { SelectedInventoryModule } from './selected-inventory/selected-inventory.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { UserModule } from './user/user.module';
     OrderModule,
     ProductModule,
     InventoryModule,
+    SelectedInventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

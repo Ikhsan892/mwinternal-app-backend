@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -12,7 +12,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<any> {
     let result = await this.usersRepository.findOne({
@@ -21,15 +21,18 @@ export class UserService {
     if (!result) {
       // Hashing Password
       const saltOrRounds = 10;
-      createUserDto.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
+      createUserDto.password = await bcrypt.hash(
+        createUserDto.password,
+        saltOrRounds,
+      );
       // Save to DB
       let hasil = await this.usersRepository.save(createUserDto);
       let find_result = await this.usersRepository.findOne({
         where: {
-          id: hasil.id
+          id: hasil.id,
         },
-        relations: ['role', 'role.menu']
-      })
+        relations: ['role', 'role.menu'],
+      });
       return find_result;
     } else {
       return {
@@ -74,26 +77,64 @@ export class UserService {
     }
   }
 
+  async getById(id: number) {
+    const user = await this.usersRepository.findOne({ id });
+    if (user) {
+      return user;
+    }
+    throw new HttpException(
+      'User with this id does not exist',
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  async getByRefresh(refreshToken: string) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        refresh_token: refreshToken,
+      },
+      relations: ['role', 'role.menu'],
+    });
+
+    if (user) {
+      return user;
+    }
+    throw new HttpException(
+      'User with this refresh token not exists',
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string) {
+    return this.getByRefresh(refreshToken);
+  }
+
   async findAll(): Promise<any> {
     return await this.usersRepository.find({
-      relations: ['role']
-    })
+      relations: ['role'],
+    });
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    await this.usersRepository.update(userId, {
+      refresh_token: refreshToken,
+    });
   }
 
   async findOne(id: number): Promise<any> {
     return await this.usersRepository.findOne({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
-    return await this.usersRepository.update({ id }, updateUserDto)
+    return await this.usersRepository.update({ id }, updateUserDto);
   }
 
   async remove(id: number): Promise<any> {
-    return await this.usersRepository.softDelete(id)
+    return await this.usersRepository.softDelete(id);
   }
 
   db(): Repository<User> {

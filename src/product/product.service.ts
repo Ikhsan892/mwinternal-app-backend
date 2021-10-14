@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -70,6 +70,18 @@ export class ProductService {
     return await this.productService.find({
       relations: ['image'],
     });
+  }
+
+  async findActive(): Promise<Product[]> {
+    let data: Product[] = await this.productService.find({
+      where: {
+        disabled: false,
+        stok: MoreThan(0),
+      },
+      relations: ['image'],
+    });
+
+    return data;
   }
 
   db() {

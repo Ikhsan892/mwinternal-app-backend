@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateInventoryDto } from 'src/inventory/dto/create-inventory.dto';
 import { UpdateInventoryDto } from 'src/inventory/dto/update-inventory.dto';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { UpdateSparepartDto } from './dto/update-sparepart.dto';
 import { Sparepart } from './entities/sparepart.entity';
 
@@ -69,6 +69,17 @@ export class SparepartService {
     return await this.sparepartService.find({
       relations: ['image'],
     });
+  }
+
+  async findActive(): Promise<Sparepart[]> {
+    let sparepart: Sparepart[] = await this.sparepartService.find({
+      where: {
+        disabled: false,
+        stok: MoreThan(0),
+      },
+      relations: ['image'],
+    });
+    return sparepart;
   }
 
   async findOne(id: number): Promise<any> {

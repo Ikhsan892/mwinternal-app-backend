@@ -1,6 +1,7 @@
 import { CategoryBarang } from 'src/category-barang/entities/category-barang.entity';
 import { GlobalEntity } from 'src/global.entity';
 import { ImageBarang } from 'src/image-barang/entities/image-barang.entity';
+import { SelectedInventory } from 'src/selected-inventory/entities/selected-inventory.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
@@ -64,4 +65,7 @@ export class Sparepart extends GlobalEntity {
 
   @OneToMany(() => ImageBarang, (cr) => cr.sparepart)
   image: ImageBarang[];
+
+  @OneToMany(() => SelectedInventory, (cr) => cr.sparepart)
+  selected: SelectedInventory[];
 }
