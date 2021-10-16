@@ -1,5 +1,7 @@
 import { Barang } from 'src/barang/entities/barang.entity';
 import { GlobalEntity } from 'src/global.entity';
+import { OrderBiayaPengurangan } from 'src/order-biayapengurangan/entities/order-biayapengurangan.entity';
+import { OrderBiayaTambahan } from 'src/order-biayatambahan/entities/order-biayatambahan.entity';
 import { PaymentMethod } from 'src/payment-method/entities/payment-method.entity';
 import { Pelanggan } from 'src/pelanggan/entities/pelanggan.entity';
 import { Pengiriman } from 'src/pengiriman/entities/pengiriman.entity';
@@ -34,6 +36,11 @@ export class Order extends GlobalEntity {
   @Column({
     nullable: true,
   })
+  garansi: string;
+
+  @Column({
+    nullable: true,
+  })
   year: number;
 
   @Column({
@@ -53,13 +60,13 @@ export class Order extends GlobalEntity {
 
   @Column({
     nullable: true,
-    default : 0
+    default: 0,
   })
   dp: number;
 
   @Column({
     nullable: true,
-    default : 0
+    default: 0,
   })
   total: number;
 
@@ -73,6 +80,12 @@ export class Order extends GlobalEntity {
 
   @OneToMany(() => SelectedInventory, (cr) => cr.order)
   selected: SelectedInventory[];
+
+  @OneToMany(() => OrderBiayaTambahan, (cr) => cr.order)
+  order_biaya: OrderBiayaTambahan[];
+
+  @OneToMany(() => OrderBiayaPengurangan, (cr) => cr.order)
+  order_diskon: OrderBiayaPengurangan[];
 
   @ManyToMany(() => Product)
   @JoinTable()

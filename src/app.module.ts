@@ -22,6 +22,8 @@ import { RoleModule } from './role/role.module';
 import { SparepartModule } from './sparepart/sparepart.module';
 import { UserModule } from './user/user.module';
 import { SelectedInventoryModule } from './selected-inventory/selected-inventory.module';
+import { OrderBiayatambahanModule } from './order-biayatambahan/order-biayatambahan.module';
+import { OrderBiayapenguranganModule } from './order-biayapengurangan/order-biayapengurangan.module';
 
 @Module({
   imports: [
@@ -58,6 +60,8 @@ import { SelectedInventoryModule } from './selected-inventory/selected-inventory
     ProductModule,
     InventoryModule,
     SelectedInventoryModule,
+    OrderBiayatambahanModule,
+    OrderBiayapenguranganModule,
   ],
   controllers: [AppController],
   providers: [AppService],

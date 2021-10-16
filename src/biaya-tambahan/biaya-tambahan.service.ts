@@ -9,18 +9,17 @@ import { BiayaTambahan } from './entities/biaya-tambahan.entity';
 
 @Injectable()
 export class BiayaTambahanService {
-
   constructor(
     @InjectRepository(BiayaTambahan)
-    private biayaService: Repository<BiayaTambahan>
-  ) { }
+    private biayaService: Repository<BiayaTambahan>,
+  ) {}
 
   async create(createBiayaTambahanDto: CreateBiayaTambahanDto): Promise<any> {
     let find_data = await this.biayaService.findOne({
       where: {
-        nama_biaya: createBiayaTambahanDto.nama_biaya
-      }
-    })
+        nama_biaya: createBiayaTambahanDto.nama_biaya,
+      },
+    });
 
     // Kalo gak ada
     if (!find_data) {
@@ -31,15 +30,13 @@ export class BiayaTambahanService {
       await this.biayaService.save(biaya);
       return {
         status: HttpStatus.CREATED,
-        message: "Biaya Tambahan Created"
-      }
-
+        message: 'Biaya Tambahan Created',
+      };
     } else {
-
       return {
         status: HttpStatus.CONFLICT,
-        message: "Biaya Tambahan already created"
-      }
+        message: 'Biaya Tambahan already created',
+      };
     }
   }
 
@@ -47,33 +44,46 @@ export class BiayaTambahanService {
     return await this.biayaService.find();
   }
 
+  async findUtama(): Promise<BiayaTambahan[]> {
+    return await this.biayaService.find({
+      where: {
+        is_utama: true,
+      },
+    });
+  }
+
   async setActive(active: ActiveBiayaTambahanDTO): Promise<any> {
     let find = await this.biayaService.findOne({
       where: {
-        id: active.id
-      }
-    })
-    await this.biayaService.update({ id: active.id }, { is_utama: !find.is_utama });
+        id: active.id,
+      },
+    });
+    await this.biayaService.update(
+      { id: active.id },
+      { is_utama: !find.is_utama },
+    );
     return {
       status: HttpStatus.CREATED,
-      message: "Success Activating"
-    }
+      message: 'Success Activating',
+    };
   }
-
 
   async findOne(id: number): Promise<BiayaTambahan> {
     return await this.biayaService.findOne({
       where: {
-        id: id
-      }
-    })
+        id: id,
+      },
+    });
   }
-  async update(id: number, updateBiayaTambahanDto: UpdateBiayaTambahanDto): Promise<any> {
-    await this.biayaService.update({ id }, updateBiayaTambahanDto)
+  async update(
+    id: number,
+    updateBiayaTambahanDto: UpdateBiayaTambahanDto,
+  ): Promise<any> {
+    await this.biayaService.update({ id }, updateBiayaTambahanDto);
     return {
       status: HttpStatus.OK,
-      message: "Data has been updated"
-    }
+      message: 'Data has been updated',
+    };
   }
 
   async removeMassive(data: DeleteBiayaTambahanDTO): Promise<any> {

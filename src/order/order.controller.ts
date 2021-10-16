@@ -1,21 +1,20 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Param,
+  Patch,
   Post,
   Put,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ValidationPipe,
   Res,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { OrderService } from './order.service';
+import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
-import { Product } from 'src/product/entities/product.entity';
+import { OrderService } from './order.service';
 
 @Controller('order')
 export class OrderController {
@@ -74,6 +73,16 @@ export class OrderController {
   @Put('/payment/:id')
   updatePayment(@Param('id') id: string, @Body('payment') payment: string) {
     return this.orderService.updatePayment(+payment, +id);
+  }
+
+  @Put('/garansi/:id')
+  updateGaransi(@Param('id') id: string, @Body('garansi') garansi: string) {
+    return this.orderService.updateGaransi(garansi, +id);
+  }
+
+  @Put('/shipping/:id')
+  updateShipping(@Param('id') id: string, @Body('shipping') shipping: string) {
+    return this.orderService.updateShippingMethod(+shipping, +id);
   }
 
   @Put('total/:id')

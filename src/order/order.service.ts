@@ -8,13 +8,14 @@ import { PaymentMethodService } from 'src/payment-method/payment-method.service'
 import { DeleteDTO } from 'src/pelanggan/dto/delete-massive.dto';
 import { Pelanggan } from 'src/pelanggan/entities/pelanggan.entity';
 import { PelangganService } from 'src/pelanggan/pelanggan.service';
+import { PengirimanService } from 'src/pengiriman/pengiriman.service';
 import { Product } from 'src/product/entities/product.entity';
 import { ProductService } from 'src/product/product.service';
 import { CreateSelectedInventoryDto } from 'src/selected-inventory/dto/create-selected-inventory.dto';
 import { SelectedInventoryService } from 'src/selected-inventory/selected-inventory.service';
 import { Sparepart } from 'src/sparepart/entities/sparepart.entity';
 import { SparepartService } from 'src/sparepart/sparepart.service';
-import { Connection, createConnection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { SelectedInterface } from './dto/selected-item.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -27,6 +28,7 @@ export class OrderService {
     private orderService: Repository<Order>,
     private productService: ProductService,
     private paymentService: PaymentMethodService,
+    private pengirimanService: PengirimanService,
     private sparepartService: SparepartService,
     private pelangganService: PelangganService,
     private selectedInventory: SelectedInventoryService,
@@ -55,9 +57,27 @@ export class OrderService {
 
   async updatePayment(payment: number, id: number) {
     let findPayment = await this.paymentService.db().findOne({
-      id: payment,
+      where: {
+        id: payment,
+      },
     });
     return await this.orderService.update({ id: id }, { payment: findPayment });
+  }
+
+  async updateShippingMethod(shipping: number, id: number) {
+    let findShipping = await this.pengirimanService.db().findOne({
+      where: {
+        id: shipping,
+      },
+    });
+    return await this.orderService.update(
+      { id: id },
+      { pengiriman: findShipping },
+    );
+  }
+
+  async updateGaransi(garansi: string, id: number) {
+    return await this.orderService.update({ id: id }, { garansi: garansi });
   }
 
   async updateDPS(id: number, dp: number) {
@@ -214,7 +234,7 @@ export class OrderService {
     });
   }
 
-  async findOne(id: number): Promise<Order> {
+  async findOne(id: number): Promise<Order | {}> {
     let data = await this.orderService.findOne({
       where: {
         id: id,
@@ -225,16 +245,25 @@ export class OrderService {
         'pengiriman',
         'barang',
         'barang.teknisi',
+        'selected',
+        'selected.product',
+        'selected.sparepart',
+        'order_biaya',
+        'order_diskon',
       ],
     });
-    if (data.status === 'new-request') {
-      // Kalo diliat detailnya tapi masih new request
-      await this.orderService.update(
-        { id: id },
-        { status: 'menunggu kepastian' },
-      );
+    if (data?.status) {
+      if (data.status === 'new-request') {
+        // Kalo diliat detailnya tapi masih new request
+        await this.orderService.update(
+          { id: id },
+          { status: 'menunggu kepastian' },
+        );
+      }
+      return data;
+    } else {
+      return { message: 'empty' };
     }
-    return data;
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {

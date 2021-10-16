@@ -8,6 +8,8 @@ import { ProductModule } from 'src/product/product.module';
 import { SparepartModule } from 'src/sparepart/sparepart.module';
 import { SelectedInventoryModule } from 'src/selected-inventory/selected-inventory.module';
 import { PaymentMethodModule } from 'src/payment-method/payment-method.module';
+import { PengirimanModule } from 'src/pengiriman/pengiriman.module';
+import { OrderBiayatambahanModule } from 'src/order-biayatambahan/order-biayatambahan.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { PaymentMethodModule } from 'src/payment-method/payment-method.module';
     PelangganModule,
     ProductModule,
     PaymentMethodModule,
+    PengirimanModule,
+    OrderBiayatambahanModule,
     SparepartModule,
     SelectedInventoryModule,
   ],

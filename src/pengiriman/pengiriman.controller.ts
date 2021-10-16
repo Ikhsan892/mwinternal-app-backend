@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
+  Put,
+} from '@nestjs/common';
 import { PengirimanService } from './pengiriman.service';
 import { CreatePengirimanDto } from './dto/create-pengiriman.dto';
 import { UpdatePengirimanDto } from './dto/update-pengiriman.dto';
@@ -10,18 +22,23 @@ import { ActivePengirimanDto } from './dto/active-pengiriman.dto';
 
 @Controller('pengiriman')
 export class PengirimanController {
-  constructor(private readonly pengirimanService: PengirimanService) { }
+  constructor(private readonly pengirimanService: PengirimanService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './dist/app/files',
-      filename: editFileName,
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './dist/app/files',
+        filename: editFileName,
+      }),
+      fileFilter: exeFileFilter,
     }),
-    fileFilter: exeFileFilter,
-  }))
-  create(@Body(new ValidationPipe()) createPengirimanDto: CreatePengirimanDto, @UploadedFile()
-  file: Express.Multer.File) {
+  )
+  create(
+    @Body(new ValidationPipe()) createPengirimanDto: CreatePengirimanDto,
+    @UploadedFile()
+    file: Express.Multer.File,
+  ) {
     return this.pengirimanService.create(createPengirimanDto, file);
   }
 
@@ -40,15 +57,26 @@ export class PengirimanController {
     return this.pengirimanService.findOne(+id);
   }
 
+  @Get('active')
+  findActive() {
+    return this.pengirimanService.findActive();
+  }
+
   @Put(':id')
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './dist/app/files',
-      filename: editFileName,
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './dist/app/files',
+        filename: editFileName,
+      }),
+      fileFilter: exeFileFilter,
     }),
-    fileFilter: exeFileFilter,
-  }))
-  update(@Param('id') id: string, @Body(new ValidationPipe()) updatePengirimanDto: UpdatePengirimanDto, @UploadedFile() file: Express.Multer.File) {
+  )
+  update(
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updatePengirimanDto: UpdatePengirimanDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return this.pengirimanService.update(+id, updatePengirimanDto, file);
   }
 
